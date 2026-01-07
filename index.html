@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Playoff Portfolios 2026</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #111827; color: white; min-height: 100vh; padding: 16px; }
+    .container { max-width: 900px; margin: 0 auto; }
+    .header { text-align: center; margin-bottom: 24px; }
+    .header h1 { font-size: 28px; color: #4ade80; margin-bottom: 8px; }
+    .header p { color: #9ca3af; font-size: 14px; }
+    .deadline { color: #eab308; font-size: 14px; margin-top: 4px; }
+    .rules-link { color: #4ade80; font-size: 14px; text-decoration: underline; cursor: pointer; margin-top: 4px; display: inline-block; }
+    .rules-link:hover { color: #86efac; }
+    .budget-bar { position: sticky; top: 0; z-index: 10; padding: 16px; border-radius: 8px; margin-bottom: 24px; background: #1f2937; }
+    .budget-bar.over { background: #7f1d1d; }
+    .budget-bar.bonus { background: #78350f; }
+    .budget-row { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
+    .budget-label { color: #9ca3af; }
+    .budget-amount { font-size: 24px; font-weight: bold; color: #4ade80; }
+    .budget-amount.over { color: #f87171; }
+    .budget-amount.bonus { color: #facc15; }
+    .budget-warning { color: #f87171; font-weight: bold; margin-top: 8px; }
+    .budget-bonus { color: #facc15; font-weight: bold; margin-top: 8px; }
+    .picks-count { font-size: 14px; color: #9ca3af; }
+    .inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
+    @media (max-width: 600px) { .inputs { grid-template-columns: 1fr; } }
+    input[type="text"], input[type="email"], input[type="password"] { background: #1f2937; border: 1px solid #374151; border-radius: 8px; padding: 12px; width: 100%; color: white; font-size: 16px; }
+    input:focus { outline: none; border-color: #4ade80; }
+    .conferences { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px; }
+    @media (max-width: 768px) { .conferences { grid-template-columns: 1fr; } }
+    .conf-title { font-size: 20px; font-weight: bold; margin-bottom: 12px; }
+    .conf-title.nfc { color: #60a5fa; }
+    .conf-title.afc { color: #f87171; }
+    .team-card { background: #1f2937; border-radius: 8px; padding: 12px; margin-bottom: 8px; border: 2px solid #374151; }
+    .team-card.buy { border-color: #22c55e; }
+    .team-card.short { border-color: #ef4444; }
+    .team-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+    .team-name { font-weight: bold; }
+    .team-info { font-size: 12px; color: #9ca3af; }
+    .team-buttons { display: flex; gap: 8px; }
+    .btn { padding: 6px 12px; border-radius: 4px; font-size: 14px; font-weight: bold; cursor: pointer; border: none; transition: background 0.2s; }
+    .btn-buy { background: #374151; color: white; }
+    .btn-buy:hover { background: #166534; }
+    .btn-buy.active { background: #16a34a; }
+    .btn-short { background: #374151; color: white; }
+    .btn-short:hover { background: #991b1b; }
+    .btn-short.active { background: #dc2626; }
+    .error { background: #7f1d1d; border: 1px solid #b91c1c; color: #fecaca; padding: 16px; border-radius: 8px; margin-bottom: 16px; }
+    .submit-btn { width: 100%; padding: 16px; border-radius: 8px; font-size: 18px; font-weight: bold; cursor: pointer; border: none; background: #16a34a; color: white; }
+    .submit-btn:hover { background: #22c55e; }
+    .submit-btn:disabled { background: #374151; color: #6b7280; cursor: not-allowed; }
+    .success-page, .closed-page { display: flex; align-items: center; justify-content: center; min-height: 80vh; }
+    .success-box, .closed-box { background: #1f2937; border-radius: 8px; padding: 32px; max-width: 400px; text-align: center; }
+    .success-box h1 { color: #4ade80; font-size: 28px; margin: 16px 0; }
+    .closed-box h1 { color: #f87171; font-size: 28px; margin-bottom: 16px; }
+    .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center; z-index: 50; padding: 16px; }
+    .modal-content { background: #1f2937; border-radius: 8px; padding: 24px; max-width: 600px; width: 100%; max-height: 90vh; overflow-y: auto; }
+    .modal-content h2 { color: #4ade80; font-size: 24px; margin-bottom: 16px; }
+    .modal-content p { color: #d1d5db; margin-bottom: 16px; line-height: 1.6; }
+    .modal-content .highlight { color: #facc15; font-weight: bold; }
+    .modal-content .white { color: white; font-weight: 600; }
+    .modal-content .green { color: #4ade80; font-weight: bold; }
+    .modal-btn { width: 100%; padding: 12px; background: #16a34a; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 8px; }
+    .modal-btn:hover { background: #22c55e; }
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+  <div class="container" id="app"></div>
+
+  <script>
+    // PASTE YOUR GOOGLE SCRIPT URL HERE:
+    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxStxUEwfwGWXS3ygclljCcnYU1uV0WQ7h4f5I_7fIW8JyXq6L2ZQXGj6WyL89wP_5s/exec';
+
+    const DEADLINE = new Date('2026-01-10T16:30:00-05:00');
+    const BUDGET = 100;
+    const ADMIN_PASSWORD = 'R@taV0lv2';
+
+    const teams = [
+      { name: "Seattle Seahawks", conference: "NFC", seed: 1, points: 35, odds: "+390" },
+      { name: "Denver Broncos", conference: "AFC", seed: 1, points: 24, odds: "+650" },
+      { name: "Chicago Bears", conference: "NFC", seed: 2, points: 12, odds: "+2000" },
+      { name: "New England Patriots", conference: "AFC", seed: 2, points: 18, odds: "+900" },
+      { name: "Philadelphia Eagles", conference: "NFC", seed: 3, points: 18, odds: "+900" },
+      { name: "Jacksonville Jaguars", conference: "AFC", seed: 3, points: 15, odds: "+1400" },
+      { name: "Carolina Panthers", conference: "NFC", seed: 4, points: 5, odds: "+15000" },
+      { name: "Pittsburgh Steelers", conference: "AFC", seed: 4, points: 5, odds: "+5000" },
+      { name: "Los Angeles Rams", conference: "NFC", seed: 5, points: 32, odds: "+425" },
+      { name: "Houston Texans", conference: "AFC", seed: 5, points: 12, odds: "+1100" },
+      { name: "San Francisco 49ers", conference: "NFC", seed: 6, points: 8, odds: "+2500" },
+      { name: "Buffalo Bills", conference: "AFC", seed: 6, points: 15, odds: "+1000" },
+      { name: "Green Bay Packers", conference: "NFC", seed: 7, points: 8, odds: "+2000" },
+      { name: "Los Angeles Chargers", conference: "AFC", seed: 7, points: 8, odds: "+2800" },
+    ];
+
+    let state = { name: '', email: '', picks: {}, error: '', loading: false, submitted: false, showRules: false };
+
+    function calcBudget() {
+      let spent = 0;
+      Object.entries(state.picks).forEach(([teamName, action]) => {
+        const team = teams.find(t => t.name === teamName);
+        if (action === 'buy') spent += team.points;
+        else if (action === 'short') spent -= team.points;
+      });
+      return BUDGET - spent;
+    }
+
+    function render() {
+      const app = document.getElementById('app');
+      const remaining = calcBudget();
+      const isOver = remaining < 0;
+      const hasBonus = remaining >= 110;
+      const allPicked = Object.keys(state.picks).length === 14;
+      const isPastDeadline = new Date() > DEADLINE;
+
+      if (isPastDeadline) {
+        app.innerHTML = `<div class="closed-page"><div class="closed-box"><h1>Entry Period Closed</h1><p style="color:#d1d5db">The deadline for Playoff Portfolios entries was Saturday, January 10 at 4:30 PM EST.</p><p style="color:#9ca3af;margin-top:16px">Good luck to all participants!</p></div></div>`;
+        return;
+      }
+
+      if (state.submitted) {
+        app.innerHTML = `<div class="success-page"><div class="success-box"><div style="font-size:60px">🏈</div><h1>Entry Submitted!</h1><p style="color:#d1d5db">Thanks for entering, ${state.name}!</p><p style="color:#9ca3af">Budget Remaining: <span style="color:white;font-weight:bold">${remaining} points</span></p>${hasBonus ? '<p style="color:#facc15;font-weight:bold;margin-top:8px">🎉 You earned 10 bonus points!</p>' : ''}<p style="color:#6b7280;margin-top:16px;font-size:14px">Your entry has been recorded. Good luck!</p></div></div>`;
+        return;
+      }
+
+      const nfc = teams.filter(t => t.conference === 'NFC').sort((a,b) => a.seed - b.seed);
+      const afc = teams.filter(t => t.conference === 'AFC').sort((a,b) => a.seed - b.seed);
+
+      const teamCard = (t) => `<div class="team-card ${state.picks[t.name] || ''}"><div class="team-header"><div><div class="team-name">${t.name}</div><div class="team-info">#${t.seed} Seed • ${t.points} pts • ${t.odds} odds</div></div><div class="team-buttons"><button class="btn btn-buy ${state.picks[t.name]==='buy'?'active':''}" onclick="pick('${t.name}','buy')">BUY</button><button class="btn btn-short ${state.picks[t.name]==='short'?'active':''}" onclick="pick('${t.name}','short')">SHORT</button></div></div></div>`;
+
+      app.innerHTML = `
+        <div class="header">
+          <h1>🏈 Playoff Portfolios 🏈</h1>
+          <p>Buy or Short each playoff team. Budget: 100 points.</p>
+          <p class="deadline">Deadline: Saturday, Jan 10 at 4:30 PM EST</p>
+          <span class="rules-link" onclick="toggleRules()">View Complete Rules</span>
+        </div>
+        <div class="budget-bar ${isOver?'over':''} ${hasBonus?'bonus':''}">
+          <div class="budget-row">
+            <div><span class="budget-label">Budget Remaining: </span><span class="budget-amount ${isOver?'over':''} ${hasBonus?'bonus':''}">${remaining} pts</span></div>
+            <div class="picks-count">Picks: ${Object.keys(state.picks).length}/14</div>
+          </div>
+          ${isOver ? '<div class="budget-warning">⚠️ Over budget! Adjust your picks.</div>' : ''}
+          ${hasBonus ? '<div class="budget-bonus">🎉 You are earning 10 bonus points!</div>' : ''}
+        </div>
+        <div class="inputs">
+          <input type="text" placeholder="Your Name" value="${state.name}" oninput="updateField('name', this.value)">
+          <input type="email" placeholder="Your Email" value="${state.email}" oninput="updateField('email', this.value)">
+        </div>
+        <div class="conferences">
+          <div><div class="conf-title nfc">NFC</div>${nfc.map(teamCard).join('')}</div>
+          <div><div class="conf-title afc">AFC</div>${afc.map(teamCard).join('')}</div>
+        </div>
+        ${state.error ? `<div class="error">${state.error}</div>` : ''}
+        <button class="submit-btn" ${state.loading || isOver ? 'disabled' : ''} onclick="submitForm()">${state.loading ? 'Submitting...' : 'Submit Entry'}</button>
+        ${state.showRules ? `<div class="modal" onclick="if(event.target===this)toggleRules()"><div class="modal-content"><h2>🏈 Contest Rules</h2><p>Welcome to the 2026 NFL Playoff Portfolios Contest! You must Buy or Short each playoff team. Odds are pre-playoffs to win the Super Bowl and shown for reference only. You can spend a maximum of 100 points on teams, but you get their points back for every team you short.</p><p>If you end up with more than 110 points left, you earn <span class="highlight">10 bonus points</span> to your final score.</p><p>The <span class="white">Wild Card round</span> is worth 1 point each. The <span class="white">Divisional Round</span> is worth 2 points each. The <span class="white">Conference Championship Games</span> are worth 3 points each and the <span class="white">Super Bowl</span> is worth 4 points. You earn the points if a team you Buy wins that round, but lose those points if a team you Short wins.</p><p><span class="green">Blowout Bonus:</span> If a team you Buy wins by 14 points or more, or a team you Short loses by 14 points or more, you earn an extra point for that game. You can even earn the bonus twice in the same game!</p><p class="highlight">Good luck!</p><button class="modal-btn" onclick="toggleRules()">Got It!</button></div></div>` : ''}
+      `;
+    }
+
+    function updateField(field, value) { state[field] = value; }
+    function toggleRules() { state.showRules = !state.showRules; render(); }
+    function pick(teamName, action) {
+      if (state.picks[teamName] === action) delete state.picks[teamName];
+      else state.picks[teamName] = action;
+      render();
+    }
+
+    async function submitForm() {
+      state.error = '';
+      if (!state.name.trim() || !state.email.trim()) { state.error = 'Please enter your name and email.'; render(); return; }
+      if (!state.email.includes('@')) { state.error = 'Please enter a valid email address.'; render(); return; }
+      if (Object.keys(state.picks).length !== 14) { state.error = 'Please make a choice (Buy or Short) for all 14 teams.'; render(); return; }
+      if (calcBudget() < 0) { state.error = 'You have overspent your budget! Please adjust your picks.'; render(); return; }
+
+      state.loading = true; render();
+
+      try {
+        const res = await fetch(GOOGLE_SCRIPT_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name: state.name.trim(),
+            email: state.email.trim(),
+            picks: state.picks,
+            budgetRemaining: calcBudget(),
+            bonusEarned: calcBudget() >= 110 ? 10 : 0
+          })
+        });
+        state.submitted = true;
+      } catch (e) {
+        state.error = 'Failed to submit. Please try again.';
+      }
+      state.loading = false; render();
+    }
+
+    render();
+  </script>
+</body>
+</html>
