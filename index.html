@@ -80,20 +80,20 @@
     const ADMIN_PASSWORD = 'R@taV0lv2';
 
     const teams = [
-      { name: "Seattle Seahawks", conference: "NFC", seed: 1, points: 35, odds: "+390" },
-      { name: "Denver Broncos", conference: "AFC", seed: 1, points: 24, odds: "+650" },
-      { name: "Chicago Bears", conference: "NFC", seed: 2, points: 12, odds: "+2000" },
-      { name: "New England Patriots", conference: "AFC", seed: 2, points: 18, odds: "+900" },
-      { name: "Philadelphia Eagles", conference: "NFC", seed: 3, points: 18, odds: "+900" },
-      { name: "Jacksonville Jaguars", conference: "AFC", seed: 3, points: 15, odds: "+1400" },
-      { name: "Carolina Panthers", conference: "NFC", seed: 4, points: 5, odds: "+15000" },
-      { name: "Pittsburgh Steelers", conference: "AFC", seed: 4, points: 5, odds: "+5000" },
-      { name: "Los Angeles Rams", conference: "NFC", seed: 5, points: 32, odds: "+425" },
-      { name: "Houston Texans", conference: "AFC", seed: 5, points: 12, odds: "+1100" },
-      { name: "San Francisco 49ers", conference: "NFC", seed: 6, points: 8, odds: "+2500" },
-      { name: "Buffalo Bills", conference: "AFC", seed: 6, points: 15, odds: "+1000" },
-      { name: "Green Bay Packers", conference: "NFC", seed: 7, points: 8, odds: "+2000" },
-      { name: "Los Angeles Chargers", conference: "AFC", seed: 7, points: 8, odds: "+2800" },
+      { name: "Seattle Seahawks", conference: "NFC", seed: 1, credits: 35, odds: "+390" },
+      { name: "Denver Broncos", conference: "AFC", seed: 1, credits: 24, odds: "+650" },
+      { name: "Chicago Bears", conference: "NFC", seed: 2, credits: 12, odds: "+2000" },
+      { name: "New England Patriots", conference: "AFC", seed: 2, credits: 18, odds: "+900" },
+      { name: "Philadelphia Eagles", conference: "NFC", seed: 3, credits: 18, odds: "+900" },
+      { name: "Jacksonville Jaguars", conference: "AFC", seed: 3, credits: 15, odds: "+1400" },
+      { name: "Carolina Panthers", conference: "NFC", seed: 4, credits: 5, odds: "+15000" },
+      { name: "Pittsburgh Steelers", conference: "AFC", seed: 4, credits: 5, odds: "+5000" },
+      { name: "Los Angeles Rams", conference: "NFC", seed: 5, credits: 32, odds: "+425" },
+      { name: "Houston Texans", conference: "AFC", seed: 5, credits: 12, odds: "+1100" },
+      { name: "San Francisco 49ers", conference: "NFC", seed: 6, credits: 8, odds: "+2500" },
+      { name: "Buffalo Bills", conference: "AFC", seed: 6, credits: 15, odds: "+1000" },
+      { name: "Green Bay Packers", conference: "NFC", seed: 7, credits: 8, odds: "+2000" },
+      { name: "Los Angeles Chargers", conference: "AFC", seed: 7, credits: 8, odds: "+2800" },
     ];
 
     let state = { name: '', email: '', picks: {}, error: '', loading: false, submitted: false, showRules: false };
@@ -102,8 +102,8 @@
       let spent = 0;
       Object.entries(state.picks).forEach(([teamName, action]) => {
         const team = teams.find(t => t.name === teamName);
-        if (action === 'buy') spent += team.points;
-        else if (action === 'short') spent -= team.points;
+        if (action === 'buy') spent += team.credits;
+        else if (action === 'short') spent -= team.credits;
       });
       return BUDGET - spent;
     }
@@ -122,19 +122,19 @@
       }
 
       if (state.submitted) {
-        app.innerHTML = `<div class="success-page"><div class="success-box"><div style="font-size:60px">🏈</div><h1>Entry Submitted!</h1><p style="color:#d1d5db">Thanks for entering, ${state.name}!</p><p style="color:#9ca3af">Budget Remaining: <span style="color:white;font-weight:bold">${remaining} points</span></p>${hasBonus ? '<p style="color:#facc15;font-weight:bold;margin-top:8px">🎉 You earned 10 bonus points!</p>' : ''}<p style="color:#6b7280;margin-top:16px;font-size:14px">Your entry has been recorded. Good luck!</p></div></div>`;
+        app.innerHTML = `<div class="success-page"><div class="success-box"><div style="font-size:60px">🏈</div><h1>Entry Submitted!</h1><p style="color:#d1d5db">Thanks for entering, ${state.name}!</p><p style="color:#9ca3af">Budget Remaining: <span style="color:white;font-weight:bold">${remaining} credits</span></p>${hasBonus ? '<p style="color:#facc15;font-weight:bold;margin-top:8px">🎉 You earned 10 bonus points!</p>' : ''}<p style="color:#6b7280;margin-top:16px;font-size:14px">Your entry has been recorded. Good luck!</p></div></div>`;
         return;
       }
 
       const nfc = teams.filter(t => t.conference === 'NFC').sort((a,b) => a.seed - b.seed);
       const afc = teams.filter(t => t.conference === 'AFC').sort((a,b) => a.seed - b.seed);
 
-      const teamCard = (t) => `<div class="team-card ${state.picks[t.name] || ''}"><div class="team-header"><div><div class="team-name">${t.name}</div><div class="team-info">#${t.seed} Seed • ${t.points} pts • ${t.odds} odds</div></div><div class="team-buttons"><button class="btn btn-buy ${state.picks[t.name]==='buy'?'active':''}" onclick="pick('${t.name}','buy')">BUY</button><button class="btn btn-short ${state.picks[t.name]==='short'?'active':''}" onclick="pick('${t.name}','short')">SHORT</button></div></div></div>`;
+      const teamCard = (t) => `<div class="team-card ${state.picks[t.name] || ''}"><div class="team-header"><div><div class="team-name">${t.name}</div><div class="team-info">#${t.seed} Seed • ${t.credits} pts • ${t.odds} odds</div></div><div class="team-buttons"><button class="btn btn-buy ${state.picks[t.name]==='buy'?'active':''}" onclick="pick('${t.name}','buy')">BUY</button><button class="btn btn-short ${state.picks[t.name]==='short'?'active':''}" onclick="pick('${t.name}','short')">SHORT</button></div></div></div>`;
 
       app.innerHTML = `
         <div class="header">
           <h1>🏈 Playoff Portfolios 🏈</h1>
-          <p>Buy or Short each playoff team. Budget: 100 points.</p>
+          <p>Buy or Short each playoff team. Budget: 100 credits.</p>
           <p class="deadline">Deadline: Saturday, Jan 10 at 4:30 PM EST</p>
           <span class="rules-link" onclick="toggleRules()">View Complete Rules</span>
         </div>
@@ -156,7 +156,7 @@
         </div>
         ${state.error ? `<div class="error">${state.error}</div>` : ''}
         <button class="submit-btn" ${state.loading || isOver ? 'disabled' : ''} onclick="submitForm()">${state.loading ? 'Submitting...' : 'Submit Entry'}</button>
-        ${state.showRules ? `<div class="modal" onclick="if(event.target===this)toggleRules()"><div class="modal-content"><h2>🏈 Contest Rules</h2><p>Welcome to the 2026 NFL Playoff Portfolios Contest! You must Buy or Short each playoff team. Odds are pre-playoffs to win the Super Bowl and shown for reference only. You can spend a maximum of 100 points on teams, but you get their points back for every team you short.</p><p>If you end up with more than 110 points left, you earn <span class="highlight">10 bonus points</span> to your final score.</p><p>The <span class="white">Wild Card round</span> is worth 1 point each. The <span class="white">Divisional Round</span> is worth 2 points each. The <span class="white">Conference Championship Games</span> are worth 3 points each and the <span class="white">Super Bowl</span> is worth 4 points. You earn the points if a team you Buy wins that round, but lose those points if a team you Short wins.</p><p><span class="green">Blowout Bonus:</span> If a team you Buy wins by 14 points or more, or a team you Short loses by 14 points or more, you earn an extra point for that game. You can even earn the bonus twice in the same game!</p><p class="highlight">Good luck!</p><button class="modal-btn" onclick="toggleRules()">Got It!</button></div></div>` : ''}
+        ${state.showRules ? `<div class="modal" onclick="if(event.target===this)toggleRules()"><div class="modal-content"><h2>🏈 Contest Rules</h2><p>Welcome to the 2026 NFL Playoff Portfolios Contest! You must Buy or Short each playoff team. Odds are pre-playoffs to win the Super Bowl and shown for reference only. You can spend a maximum of 100 credits on teams, but you get their credits back for every team you short.</p><p>If you end up with more than 110 credits left, you earn <span class="highlight">10 bonus points</span> to your final score.</p><p>The <span class="white">Wild Card round</span> is worth 1 point each. The <span class="white">Divisional Round</span> is worth 2 points each. The <span class="white">Conference Championship Games</span> are worth 3 points each and the <span class="white">Super Bowl</span> is worth 4 points. You earn the points if a team you Buy wins that round, but lose those points if a team you Short wins.</p><p><span class="green">Blowout Bonus:</span> If a team you Buy wins by 14 points or more, or a team you Short loses by 14 points or more, you earn an extra point for that game. You can even earn the bonus twice in the same game!</p><p class="highlight">Good luck!</p><button class="modal-btn" onclick="toggleRules()">Got It!</button></div></div>` : ''}
       `;
     }
 
