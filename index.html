@@ -129,7 +129,7 @@
       const nfc = teams.filter(t => t.conference === 'NFC').sort((a,b) => a.seed - b.seed);
       const afc = teams.filter(t => t.conference === 'AFC').sort((a,b) => a.seed - b.seed);
 
-      const teamCard = (t) => `<div class="team-card ${state.picks[t.name] || ''}"><div class="team-header"><div><div class="team-name">${t.name}</div><div class="team-info">#${t.seed} Seed • ${t.credits} pts • ${t.odds} odds</div></div><div class="team-buttons"><button class="btn btn-buy ${state.picks[t.name]==='buy'?'active':''}" onclick="pick('${t.name}','buy')">BUY</button><button class="btn btn-short ${state.picks[t.name]==='short'?'active':''}" onclick="pick('${t.name}','short')">SHORT</button></div></div></div>`;
+      const teamCard = (t) => `<div class="team-card ${state.picks[t.name] || ''}"><div class="team-header"><div><div class="team-name">${t.name}</div><div class="team-info">#${t.seed} Seed • ${t.credits} credits • ${t.odds} odds</div></div><div class="team-buttons"><button class="btn btn-buy ${state.picks[t.name]==='buy'?'active':''}" onclick="pick('${t.name}','buy')">BUY</button><button class="btn btn-short ${state.picks[t.name]==='short'?'active':''}" onclick="pick('${t.name}','short')">SHORT</button></div></div></div>`;
 
       app.innerHTML = `
         <div class="header">
@@ -140,7 +140,7 @@
         </div>
         <div class="budget-bar ${isOver?'over':''} ${hasBonus?'bonus':''}">
           <div class="budget-row">
-            <div><span class="budget-label">Budget Remaining: </span><span class="budget-amount ${isOver?'over':''} ${hasBonus?'bonus':''}">${remaining} pts</span></div>
+            <div><span class="budget-label">Budget Remaining: </span><span class="budget-amount ${isOver?'over':''} ${hasBonus?'bonus':''}">${remaining} credits</span></div>
             <div class="picks-count">Picks: ${Object.keys(state.picks).length}/14</div>
           </div>
           ${isOver ? '<div class="budget-warning">⚠️ Over budget! Adjust your picks.</div>' : ''}
